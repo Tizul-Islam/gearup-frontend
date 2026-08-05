@@ -59,13 +59,7 @@ function LoginPageContent() {
     },
     onSuccess: (user) => {
       toast.success("Welcome back!");
-      const redirectTo =
-        searchParams.get("redirect") || searchParams.get("callbackUrl");
-      if (redirectTo) {
-        router.replace(redirectTo);
-        return;
-      }
-      router.replace(getDashboardPath(user.role));
+      router.replace("/");
     },
     onError: (error: any) => {
       const message = error?.message || error?.errorDetails?.message;
