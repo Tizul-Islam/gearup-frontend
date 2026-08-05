@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Home, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
@@ -18,28 +18,22 @@ export default function NotFound() {
 
         {/* Message */}
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold text-foreground">
-            Page Not Found
-          </h2>
+          <h2 className="text-3xl font-bold text-foreground">Page Not Found</h2>
           <p className="text-muted-foreground text-lg">
-            We couldn't find the page you're looking for. It might have been moved, deleted, or never existed.
+            We couldn't find the page you're looking for. It might have been
+            moved, deleted, or never existed.
           </p>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <Button asChild size="lg" className="rounded-full">
-            <Link href="/">
-              <Home className="w-4 h-4 mr-2" />
-              Back to Home
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="rounded-full">
-            <Link href="/gear">
-              <Search className="w-4 h-4 mr-2" />
-              Browse Gear
-            </Link>
-          </Button>
+          <Link href="/" className={buttonVariants({ size: "lg", className: "rounded-full" })}>
+            <Home className="w-4 h-4 mr-2" />
+            Back to Home
+          </Link>
+          <Link href="/gear" className={buttonVariants({ variant: "outline", size: "lg", className: "rounded-full" })}>
+            <Search className="w-4 h-4 mr-2" />
+            Browse Gear
+          </Link>
         </div>
 
         {/* Help Text */}

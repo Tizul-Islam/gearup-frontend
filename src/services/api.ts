@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
 
@@ -32,6 +32,7 @@ export const api = axios.create({
     "Content-Type": "application/json",
   },
   withCredentials: true,
+  timeout: 15000,
 });
 
 api.interceptors.request.use(
@@ -52,6 +53,16 @@ api.interceptors.response.use(
 
     if (!originalRequest) {
       return Promise.reject(error.response?.data || error);
+    }
+
+    // Handle timeout errors specifically
+    if (error.code === "ECONNABORTED" || error.message.includes("timeout")) {
+      console.warn("Request timeout - server might be waking up");
+      // Don't reject immediately, let the UI handle it with a retry option
+      return Promise.reject({
+        message: "Server is waking up, please wait...",
+        isTimeout: true,
+      });
     }
 
     const isRefreshRequest = originalRequest.url?.includes(
