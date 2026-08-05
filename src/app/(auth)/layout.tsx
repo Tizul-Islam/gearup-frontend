@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Tent } from "lucide-react";
+import { Tent, Home } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function AuthLayout({
   children,
@@ -48,18 +49,19 @@ export default function AuthLayout({
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
-        </div>
+        </div> 
 
-        <div className="absolute top-4 right-4 md:top-8 md:right-8 flex items-center gap-4 z-10">
+        <div className="absolute top-4 right-4 md:top-8 md:right-8 flex items-center gap-3 z-50 bg-background/40 backdrop-blur-md p-1.5 rounded-full border border-border/50 shadow-sm">
           <ThemeToggle />
           <Link
             href="/"
-            className="text-sm font-medium text-foreground hover:text-primary transition-colors bg-background/50 backdrop-blur-md px-4 py-2 rounded-full border border-border/50"
+            className={buttonVariants({ variant: "outline", className: "rounded-full h-9 px-4 border-none bg-background/50 hover:bg-background/80 shadow-none" })}
           >
+            <Home className="w-4 h-4 mr-2" />
             Back to Home
           </Link>
         </div>
-        
+         
         <div className="flex-1 flex items-center justify-center p-4 sm:p-8 lg:p-12 relative z-10">
           <div className="w-full max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-card/60 backdrop-blur-xl border border-border/50 shadow-2xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {children}
