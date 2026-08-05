@@ -88,7 +88,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = React.useCallback(
     async (credentials: { email: string; password: string }) => {
       // 1. Backend returns tokens and sets cookies via proxy
-      await api.post("/api/auth/login", credentials);
+      const loginResponse: any = await api.post("/api/auth/login", credentials);
+      if (loginResponse?.data?.accessToken) {
+        localStorage.setItem("accessToken", loginResponse.data.accessToken);
+      }
 
       // 2. Frontend fetches user profile now that cookies are set
       const response = await api.get("/api/auth/me");
@@ -112,6 +115,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await api.post("/api/auth/logout");
     } catch (e) {
       console.error("Logout API error:", e);
+    }
+
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("accessToken");
     }
 
     // 2. Clear React Query state

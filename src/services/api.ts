@@ -11,6 +11,7 @@ const clearAuthAndRedirect = () => {
     document.cookie = "accessToken=; Max-Age=0; path=/; SameSite=Lax";
     document.cookie = "refreshToken=; Max-Age=0; path=/; SameSite=Lax";
     document.cookie = "userRole=; Max-Age=0; path=/; SameSite=Lax";
+    localStorage.removeItem("accessToken");
 
     // Only redirect if not already on an auth route to prevent infinite loops
     const path = window.location.pathname;
@@ -37,6 +38,12 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
     return config;
   },
   (error) => {
@@ -104,7 +111,12 @@ api.interceptors.response.use(
           isRefreshing = true;
           refreshPromise = api
             .post("/api/auth/refresh-token")
-            .then(() => undefined)
+            .then((res: any) => {
+              if (res?.data?.accessToken) {
+                localStorage.setItem("accessToken", res.data.accessToken);
+              }
+              return undefined;
+            })
             .finally(() => {
               isRefreshing = false;
               refreshPromise = null;
