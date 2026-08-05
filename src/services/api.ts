@@ -114,6 +114,10 @@ api.interceptors.response.use(
             .then((res: any) => {
               if (res?.data?.accessToken) {
                 localStorage.setItem("accessToken", res.data.accessToken);
+                document.cookie = `accessToken=${res.data.accessToken}; path=/; max-age=3600; SameSite=Lax`;
+                if (res?.data?.refreshToken) {
+                  document.cookie = `refreshToken=${res.data.refreshToken}; path=/; max-age=604800; SameSite=Lax`;
+                }
               }
               return undefined;
             })

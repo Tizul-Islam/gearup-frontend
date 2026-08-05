@@ -91,6 +91,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const loginResponse: any = await api.post("/api/auth/login", credentials);
       if (loginResponse?.data?.accessToken) {
         localStorage.setItem("accessToken", loginResponse.data.accessToken);
+        document.cookie = `accessToken=${loginResponse.data.accessToken}; path=/; max-age=3600; SameSite=Lax`;
+        if (loginResponse?.data?.refreshToken) {
+          document.cookie = `refreshToken=${loginResponse.data.refreshToken}; path=/; max-age=604800; SameSite=Lax`;
+        }
       }
 
       // 2. Frontend fetches user profile now that cookies are set
@@ -119,6 +123,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (typeof window !== "undefined") {
       localStorage.removeItem("accessToken");
+      document.cookie = "accessToken=; Max-Age=0; path=/; SameSite=Lax";
+      document.cookie = "refreshToken=; Max-Age=0; path=/; SameSite=Lax";
     }
 
     // 2. Clear React Query state
